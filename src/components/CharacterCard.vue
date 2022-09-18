@@ -3,20 +3,25 @@
 <template>
   <div class="card">
     <div class="img">
-      <img
-        alt="Rick's Toxic Side"
-        src="https://rickandmortyapi.com/api/character/avatar/361.jpeg"
-      />
+      <img alt="Rick's Toxic Side" :src="card.image" />
     </div>
     <div class="content">
       <div class="details">
-        <span>Name</span>
-        <span>Desc</span>
+        <span class="name">{{ card.name }}</span>
+        <span class="desc">{{ card.species }} - {{ card.status }}</span>
       </div>
       <button>Add to Favorites</button>
     </div>
   </div>
 </template>
+
+<script setup lang="ts">
+import { defineProps, toRefs } from "vue";
+
+const props = defineProps(["card"]);
+
+const { card } = toRefs(props);
+</script>
 
 <style scoped lang="scss">
 .card {
@@ -33,10 +38,16 @@
 
   .content {
     text-align: left;
-    padding: 10px;
+    padding: 12px;
     .details {
       display: flex;
       flex-direction: column;
+      font-size: 0.9rem;
+      padding-bottom: 0.5rem;
+
+      .name {
+        font-weight: 700;
+      }
     }
   }
 
