@@ -1,20 +1,25 @@
 import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import CharactersView from "../views/CharactersView.vue";
+import CharacterDetails from "../views/CharacterDetails.vue";
+import FavoriteCharacters from "../views/FavoriteCharacters.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
     path: "/",
     name: "characters",
     component: CharactersView,
+    props: (route) => ({ page: route?.query?.page || 1 }),
+  },
+  {
+    path: "/character/:id",
+    name: "CharacterDetails",
+    props: true,
+    component: CharacterDetails,
   },
   {
     path: "/favourites",
     name: "favourites",
-    // route level code-splitting
-    // this generates a separate chunk (about.[hash].js) for this route
-    // which is lazy-loaded when the route is visited.
-    component: () =>
-      import(/* webpackChunkName: "about" */ "../views/AboutView.vue"),
+    component: FavoriteCharacters,
   },
 ];
 

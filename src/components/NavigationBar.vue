@@ -6,9 +6,15 @@
       <router-link to="/">Characters</router-link> |
       <router-link to="/favourites">Favourites</router-link>
     </div>
-    <span> 1 </span>
+    <span class="favourites"> {{ store.state.favourites.length }} </span>
   </nav>
 </template>
+
+<script setup lang="ts">
+import { useStore } from "vuex";
+
+const store = useStore();
+</script>
 
 <style lang="scss">
 nav {
@@ -25,6 +31,10 @@ nav {
     &.router-link-exact-active {
       color: #fff;
     }
+  }
+
+  .favourites {
+    color: #fff;
   }
 }
 </style>

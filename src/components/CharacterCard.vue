@@ -10,17 +10,50 @@
         <span class="name">{{ card.name }}</span>
         <span class="desc">{{ card.species }} - {{ card.status }}</span>
       </div>
-      <button>Add to Favorites</button>
+      <button @click.stop="btnProps.handler(card.id)">
+        {{ btnProps.text }}
+      </button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { defineProps, toRefs } from "vue";
+import { defineProps, toRefs, computed } from "vue";
+import { useStore } from "vuex";
 
-const props = defineProps(["card"]);
+const store = useStore();
+
+const props = defineProps(["card", "click"]);
 
 const { card } = toRefs(props);
+
+const addToFavorites = (id: number) => {
+  store.commit("addToFavourites", { value: id });
+
+  // console.log(store.state.favourites);
+
+  localStorage.setItem(
+    "favourites",
+    JSON.stringify([...store.state.favourites])
+  );
+};
+
+const removeFromFavorites = (id: number) => {
+  store.commit("removeFromFavourites", { value: id });
+
+  // console.log(store.state.favourites);
+
+  localStorage.setItem(
+    "favourites",
+    JSON.stringify([...store.state.favourites])
+  );
+};
+
+const btnProps = computed(() => {
+  return store.state.favourites.includes(card?.value.id)
+    ? { handler: removeFromFavorites, text: "Remove from favorites" }
+    : { handler: addToFavorites, text: "Add to favorites" };
+});
 </script>
 
 <style scoped lang="scss">
