@@ -4,33 +4,45 @@
   <div class="card">
     <div class="content">
       <div class="details">
-        <h1 class="name">name</h1>
-        <span class="desc">status</span>
-        <span class="desc">Last known location</span>
+        <h1 class="name">{{ character.name }}</h1>
+        <span class="desc"
+          >{{ character.species }} - {{ character.status }}</span
+        >
+        <span class="desc"
+          >Last known location: {{ character.location.name }}</span
+        >
         <span class="desc">First seen in </span>
       </div>
       <button>Add to Favorites</button>
     </div>
     <div class="img">
-      <img
-        alt="Rick's Toxic Side"
-        src="https://rickandmortyapi.com/api/character/avatar/3.jpeg"
-      />
+      <img :alt="character.name" :src="character.image" />
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-// import { computed } from "vue";
-// import { useStore } from "vuex";
+<script lang="ts">
+import { defineComponent, watchEffect, ref } from "vue";
 
-// const store = useStore();
+export default defineComponent({
+  props: ["card"],
 
-// const btnText = computed(() => {
-//   return store.state.favourites.includes(card?.value.id)
-//     ? "Remove from favorites"
-//     : "Add to favorites";
-// });
+  setup(props) {
+    let character = ref(props.card);
+
+    watchEffect(() => {
+      character = ref(props.card);
+    });
+
+    // console.log(character);
+
+    // const characterCard = ref(props.card);
+
+    return {
+      character,
+    };
+  },
+});
 </script>
 
 <style scoped lang="scss">

@@ -25,8 +25,8 @@
       />
     </div>
     <div class="search">
-      <input placeholder="Search by name..." type="text" />
-      <button>Search</button>
+      <input placeholder="Search by name..." type="text" v-model="keyword" />
+      <button @click="search">Search</button>
     </div>
   </div>
 </template>
@@ -38,14 +38,19 @@ export default defineComponent({
   components: {
     RadioButton,
   },
-  emits: ["filter-characters"],
+  emits: ["filter-characters", "search-character"],
 
   setup(_, { emit }) {
     let selectedFilter = ref("All");
+    let keyword = ref("");
 
     const inputHandler = (value: string) => {
       selectedFilter.value = value;
       emit("filter-characters", value);
+    };
+
+    const search = () => {
+      emit("search-character", keyword.value);
     };
 
     const isChecked = (val: string) => {
@@ -53,9 +58,11 @@ export default defineComponent({
     };
 
     return {
+      keyword,
       inputHandler,
       selectedFilter,
       isChecked,
+      search,
     };
   },
 });

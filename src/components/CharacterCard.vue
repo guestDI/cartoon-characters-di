@@ -1,20 +1,22 @@
 <!-- @format -->
 
 <template>
-  <div class="card">
-    <div class="img">
-      <img alt="Rick's Toxic Side" :src="card.image" />
-    </div>
-    <div class="content">
-      <div class="details">
-        <span class="name">{{ card.name }}</span>
-        <span class="desc">{{ card.species }} - {{ card.status }}</span>
+  <router-link :to="{ name: 'CharacterDetails', params: { id: card.id } }">
+    <div class="card">
+      <div class="img">
+        <img :alt="card.name" :src="card.image" />
       </div>
-      <button @click.stop="btnProps.handler(card.id)">
-        {{ btnProps.text }}
-      </button>
+      <div class="content">
+        <div class="details">
+          <span class="name">{{ card.name }}</span>
+          <span class="desc">{{ card.species }} - {{ card.status }}</span>
+        </div>
+        <button @click.stop.prevent="btnProps.handler(card.id)">
+          {{ btnProps.text }}
+        </button>
+      </div>
     </div>
-  </div>
+  </router-link>
 </template>
 
 <script setup lang="ts">
@@ -23,7 +25,7 @@ import { useStore } from "vuex";
 
 const store = useStore();
 
-const props = defineProps(["card", "click"]);
+const props = defineProps(["card"]);
 
 const { card } = toRefs(props);
 
@@ -57,6 +59,9 @@ const btnProps = computed(() => {
 </script>
 
 <style scoped lang="scss">
+a {
+  text-decoration: none;
+}
 .card {
   border: 1px solid #e5e5e5;
   border-radius: 2px;
@@ -72,7 +77,9 @@ const btnProps = computed(() => {
   .content {
     text-align: left;
     padding: 12px;
+
     .details {
+      color: #000;
       display: flex;
       flex-direction: column;
       font-size: 0.9rem;

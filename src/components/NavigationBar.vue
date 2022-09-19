@@ -6,7 +6,10 @@
       <router-link to="/">Characters</router-link> |
       <router-link to="/favourites">Favourites</router-link>
     </div>
-    <span class="favourites"> {{ store.state.favourites.length }} </span>
+    <div class="favourites">
+      <img src="@/assets/heart.svg" width="20" height="20" />
+      <span> {{ store.state.favourites.length }} </span>
+    </div>
   </nav>
 </template>
 
@@ -34,7 +37,16 @@ nav {
   }
 
   .favourites {
-    color: #fff;
+    display: flex;
+    align-items: center;
+
+    img {
+      margin-right: 0.6rem;
+    }
+
+    span {
+      color: #fff;
+    }
   }
 }
 </style>
