@@ -24,6 +24,11 @@ const store = createStore<State>({
       }
     },
   },
+  getters: {
+    favouritesCount(state) {
+      return state.favourites.length;
+    },
+  },
 });
 
 const app = createApp(App);

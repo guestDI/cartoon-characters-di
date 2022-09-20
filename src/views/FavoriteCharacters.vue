@@ -2,7 +2,7 @@
 
 <template>
   <div class="container">
-    <div v-if="store.state.favourites.length === 0" class="empty">
+    <div v-if="store.getters.favouritesCount === 0" class="empty">
       <h3>No favourite characters</h3>
       <Button @click="router.back">Go back</Button>
     </div>
@@ -50,7 +50,7 @@ export default defineComponent({
       }
     };
 
-    if (store.state.favourites.length) {
+    if (store.getters.favouritesCount) {
       getCharacters(store.state.favourites);
     }
 
@@ -65,7 +65,7 @@ export default defineComponent({
 });
 </script>
 
-<style lang="scss">
+<style scoped lang="scss">
 .empty {
   display: flex;
   flex-direction: column;

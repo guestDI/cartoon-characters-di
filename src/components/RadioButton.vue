@@ -7,25 +7,22 @@
     name="radioCharacter"
     :value="option"
     :checked="checked"
-    @change="$emit('input', ($event?.target as HTMLInputElement).value)"
+    @change="emit('input', ($event?.target as HTMLInputElement).value)"
   />
   <label :for="option">{{ option }}</label>
 </template>
 
-<script lang="ts">
-export default {
-  props: {
-    option: {
-      required: true,
-      type: String,
-    },
-    checked: {
-      required: true,
-      type: Boolean,
-    },
-  },
-  emits: ["input"],
-};
+<script setup lang="ts">
+import { defineProps, defineEmits } from "vue";
+import { SpeciesFilter } from "@/types";
+
+interface Props {
+  option: SpeciesFilter;
+  checked: boolean;
+}
+
+defineProps<Props>();
+const emit = defineEmits(["input"]);
 </script>
 
 <style scoped lang="scss">

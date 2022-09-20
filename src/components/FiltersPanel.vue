@@ -35,6 +35,8 @@
 import { defineComponent, ref } from "vue";
 import RadioButton from "@/components/RadioButton.vue";
 import Button from "@/components/Button.vue";
+import { SpeciesFilter } from "@/types";
+
 export default defineComponent({
   components: {
     RadioButton,
@@ -46,7 +48,7 @@ export default defineComponent({
     let selectedFilter = ref("All");
     let keyword = ref("");
 
-    const changeFilter = (value: string) => {
+    const changeFilter = (value: SpeciesFilter) => {
       selectedFilter.value = value;
       emit("filter", value);
     };
@@ -55,9 +57,7 @@ export default defineComponent({
       emit("search", keyword.value);
     };
 
-    const isChecked = (val: string) => {
-      return val === selectedFilter.value;
-    };
+    const isChecked = (value: SpeciesFilter) => value === selectedFilter.value;
 
     return {
       keyword,

@@ -1,4 +1,4 @@
-interface Character {
+export interface Character {
   id: number;
   name: string;
   status: string;
@@ -6,8 +6,8 @@ interface Character {
   type: string;
   gender: string;
   origin: {
-    name: "Alien Spa";
-    url: "https://rickandmortyapi.com/api/location/64";
+    name: string;
+    url: string;
   };
   location: {
     name: string;
@@ -18,4 +18,6 @@ interface Character {
   url: string;
 }
 
-type Species = "Humanoid";
+export type Species = "Human" | "Alien" | "Animal";
+
+export type SpeciesFilter = Species | "All";

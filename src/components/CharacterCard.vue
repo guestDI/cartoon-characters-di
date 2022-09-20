@@ -85,12 +85,12 @@ a {
 .card {
   border: 1px solid #e5e5e5;
   border-radius: 2px;
-  width: 100%;
+  width: 13rem;
   cursor: pointer;
 
   img {
-    width: 150px;
-    height: 150px;
+    width: 13rem;
+    height: 13rem;
     object-fit: cover;
   }
 

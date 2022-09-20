@@ -83,8 +83,8 @@ export default defineComponent({
   justify-content: space-between;
 
   img {
-    width: 150px;
-    height: 150px;
+    width: 13rem;
+    height: 13rem;
     object-fit: cover;
   }
 
@@ -96,6 +96,7 @@ export default defineComponent({
       flex-direction: column;
       font-size: 0.9rem;
       padding-bottom: 0.5rem;
+      line-height: 1.8;
 
       .name {
         margin: 0;

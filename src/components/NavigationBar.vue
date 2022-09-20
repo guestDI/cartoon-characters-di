@@ -6,9 +6,9 @@
       <router-link to="/">Characters</router-link> |
       <router-link to="/favourites">Favourites</router-link>
     </div>
-    <div class="favourites">
+    <div class="stat">
       <img src="@/assets/heart.svg" width="20" height="20" />
-      <span> {{ store.state.favourites.length }} </span>
+      <span> {{ store.getters.favouritesCount }} </span>
     </div>
   </nav>
 </template>
@@ -21,7 +21,7 @@ const store = useStore();
 
 <style lang="scss">
 nav {
-  padding: 20px;
+  padding: 1rem 2rem;
   background-color: #0a1b22;
   display: flex;
   justify-content: space-between;
@@ -36,16 +36,13 @@ nav {
     }
   }
 
-  .favourites {
+  .stat {
     display: flex;
     align-items: center;
+    color: #fff;
 
     img {
       margin-right: 0.6rem;
-    }
-
-    span {
-      color: #fff;
     }
   }
 }

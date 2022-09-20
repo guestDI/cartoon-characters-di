@@ -32,12 +32,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, watchEffect } from "vue";
+import { defineComponent, Ref, ref, watchEffect } from "vue";
 import CharacterCard from "@/components/CharacterCard.vue";
 import FiltersPanel from "@/components/FiltersPanel.vue";
 import CharacterService from "@/services/CharacterService";
 import axios from "axios";
 import { useRoute } from "vue-router";
+import { Character } from "../types";
 
 export default defineComponent({
   name: "CharactersView",
@@ -50,7 +51,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
 
-    const data: any = ref(null);
+    const data: Ref<Character[]> = ref([]);
     const totalPages = ref(0);
     const selectedFilter = ref("All");
 
@@ -112,11 +113,9 @@ export default defineComponent({
 .container {
   width: 90%;
   margin: 1rem auto;
-  display: grid;
-  grid-gap: 15px;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  height: max-content;
-  align-content: baseline;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
 }
 
 .footer {
