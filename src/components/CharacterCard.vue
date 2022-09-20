@@ -11,50 +11,70 @@
           <span class="name">{{ card.name }}</span>
           <span class="desc">{{ card.species }} - {{ card.status }}</span>
         </div>
-        <button @click.stop.prevent="btnProps.handler(card.id)">
-          {{ btnProps.text }}
-        </button>
+        <Button @click.prevent="btnProps.handler">{{ btnProps.text }}</Button>
       </div>
     </div>
   </router-link>
 </template>
 
-<script setup lang="ts">
-import { defineProps, toRefs, computed } from "vue";
+<script lang="ts">
+import { defineComponent, toRefs, computed } from "vue";
 import { useStore } from "vuex";
+import Button from "@/components/Button.vue";
 
-const store = useStore();
+export default defineComponent({
+  props: ["card"],
+  emits: ["remove"],
+  components: {
+    Button,
+  },
 
-const props = defineProps(["card"]);
+  setup(props, context) {
+    const store = useStore();
 
-const { card } = toRefs(props);
+    const { card } = toRefs(props);
 
-const addToFavorites = (id: number) => {
-  store.commit("addToFavourites", { value: id });
+    const addToFavorites = (id: number) => {
+      store.commit("addToFavourites", { value: id });
 
-  // console.log(store.state.favourites);
+      localStorage.setItem(
+        "favourites",
+        JSON.stringify([...store.state.favourites])
+      );
+    };
 
-  localStorage.setItem(
-    "favourites",
-    JSON.stringify([...store.state.favourites])
-  );
-};
+    const removeFromFavorites = (id: number) => {
+      store.commit("removeFromFavourites", { value: id });
 
-const removeFromFavorites = (id: number) => {
-  store.commit("removeFromFavourites", { value: id });
+      localStorage.setItem(
+        "favourites",
+        JSON.stringify([...store.state.favourites])
+      );
 
-  // console.log(store.state.favourites);
+      context.emit("remove", id);
+    };
 
-  localStorage.setItem(
-    "favourites",
-    JSON.stringify([...store.state.favourites])
-  );
-};
+    const emitCheck = (id: number) => {
+      // context.emit("remove", id);
+    };
 
-const btnProps = computed(() => {
-  return store.state.favourites.includes(card?.value.id)
-    ? { handler: removeFromFavorites, text: "Remove from favorites" }
-    : { handler: addToFavorites, text: "Add to favorites" };
+    const btnProps = computed(() => {
+      return store.state.favourites.includes(card?.value.id)
+        ? {
+            handler: () => removeFromFavorites(card?.value.id),
+            text: "Remove from favorites",
+          }
+        : {
+            handler: () => addToFavorites(card?.value.id),
+            text: "Add to favorites",
+          };
+    });
+
+    return {
+      btnProps,
+      emitCheck,
+    };
+  },
 });
 </script>
 
@@ -88,20 +108,6 @@ a {
       .name {
         font-weight: 700;
       }
-    }
-  }
-
-  button {
-    background-color: #000;
-    color: #fff;
-    cursor: pointer;
-    padding: 8px;
-    border: 1px solid #000;
-    border-radius: 5px;
-    font-size: 0.8rem;
-
-    &:hover {
-      background-color: rgb(47, 44, 44);
     }
   }
 }

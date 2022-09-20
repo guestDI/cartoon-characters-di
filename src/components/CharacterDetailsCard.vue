@@ -13,7 +13,7 @@
         >
         <span class="desc">First seen in </span>
       </div>
-      <button>Add to Favorites</button>
+      <Button @click.prevent="btnProps.handler">{{ btnProps.text }}</Button>
     </div>
     <div class="img">
       <img :alt="character.name" :src="character.image" />
@@ -22,24 +22,51 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, ref } from "vue";
+import { defineComponent, watchEffect, ref, computed } from "vue";
+import { useStore } from "vuex";
+import Button from "@/components/Button.vue";
 
 export default defineComponent({
+  components: {
+    Button,
+  },
   props: ["card"],
 
   setup(props) {
     let character = ref(props.card);
+    const store = useStore();
 
     watchEffect(() => {
       character = ref(props.card);
     });
 
-    // console.log(character);
+    const addToFavorites = () => {
+      store.commit("addToFavourites", { value: character.value.id });
 
-    // const characterCard = ref(props.card);
+      localStorage.setItem(
+        "favourites",
+        JSON.stringify([...store.state.favourites])
+      );
+    };
+
+    const removeFromFavorites = () => {
+      store.commit("removeFromFavourites", { value: character.value.id });
+
+      localStorage.setItem(
+        "favourites",
+        JSON.stringify([...store.state.favourites])
+      );
+    };
+
+    const btnProps = computed(() => {
+      return store.state.favourites.includes(character?.value.id)
+        ? { handler: removeFromFavorites, text: "Remove from favorites" }
+        : { handler: addToFavorites, text: "Add to favorites" };
+    });
 
     return {
       character,
+      btnProps,
     };
   },
 });
@@ -73,20 +100,6 @@ export default defineComponent({
       .name {
         margin: 0;
       }
-    }
-  }
-
-  button {
-    background-color: #000;
-    color: #fff;
-    cursor: pointer;
-    padding: 8px;
-    border: 1px solid #000;
-    border-radius: 5px;
-    font-size: 0.8rem;
-
-    &:hover {
-      background-color: rgb(47, 44, 44);
     }
   }
 }

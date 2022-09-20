@@ -1,7 +1,6 @@
 <!-- @format -->
 
 <template>
-  <!-- <div class="radio-toolbar"> -->
   <input
     type="radio"
     :id="option"
@@ -11,13 +10,6 @@
     @change="$emit('input', ($event?.target as HTMLInputElement).value)"
   />
   <label :for="option">{{ option }}</label>
-
-  <!--   <input type="radio" id="radioBanana" name="radioFruit" value="banana" />
-    <label for="radioBanana">Banana</label>
-
-    <input type="radio" id="radioOrange" name="radioFruit" value="orange" />
-    <label for="radioOrange">Orange</label> -->
-  <!-- </div> -->
 </template>
 
 <script lang="ts">

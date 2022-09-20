@@ -2,16 +2,13 @@
 
 <template>
   <div>
-    <FiltersPanel
-      @filter-characters="filterCharacter"
-      @search-character="searchCharacter"
-    />
+    <FiltersPanel @filter="onFilterCharacter" @search="searchCharacter" />
     <div class="container">
       <CharacterCard v-for="(card, index) in data" :key="index" :card="card" />
     </div>
     <div class="footer">
       <div class="total">
-        Page {{ `${route.query.page}` }} of {{ totalPages }}
+        Page {{ `${route.query.page || 1} ` }} of {{ totalPages }}
       </div>
       <div class="pagination">
         <router-link
@@ -20,12 +17,12 @@
             query: { page: parseInt(`${route.query.page}`) - 1 },
           }"
           v-if="parseInt(`${route.query.page}`) != 1"
-          >&#60; Prev</router-link
+          >Prev</router-link
         >
         <router-link
           :to="{
             path: '/',
-            query: { page: parseInt(`${route.query.page}`) + 1 },
+            query: { page: parseInt(`${route.query.page}`) + 1 || 1 },
           }"
           >Next &#62;</router-link
         >
@@ -38,8 +35,9 @@
 import { defineComponent, ref, watchEffect } from "vue";
 import CharacterCard from "@/components/CharacterCard.vue";
 import FiltersPanel from "@/components/FiltersPanel.vue";
+import CharacterService from "@/services/CharacterService";
 import axios from "axios";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 
 export default defineComponent({
   name: "CharactersView",
@@ -49,31 +47,25 @@ export default defineComponent({
   },
   props: ["query"],
 
-  setup(props) {
-    const router = useRouter();
+  setup() {
     const route = useRoute();
 
     const data: any = ref(null);
     const totalPages = ref(0);
     const selectedFilter = ref("All");
 
-    const getCharacters = async (page: number) => {
-      try {
-        const json = await axios.get(
-          `https://rickandmortyapi.com/api/character?page=${page}`
-        );
-        totalPages.value = json.data.info.pages;
-        data.value = json.data.results;
-      } catch (e) {
-        throw new Error("Something went wrong, " + e);
-      }
-    };
-
     watchEffect(() => {
-      getCharacters(+route.query.page!);
+      CharacterService.getCharacters(+route.query.page! || 1)
+        .then((response) => {
+          totalPages.value = response.data.info.pages;
+          data.value = response.data.results;
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
     });
 
-    const filterCharacter = async (value: string) => {
+    const onFilterCharacter = async (value: string) => {
       selectedFilter.value = value;
       const searchQuery = value === "All" ? "" : `?species=${value}`;
 
@@ -108,7 +100,7 @@ export default defineComponent({
     return {
       data,
       totalPages,
-      filterCharacter,
+      onFilterCharacter,
       searchCharacter,
       route,
     };
