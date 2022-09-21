@@ -3,10 +3,11 @@
 <template>
   <div>
     <FiltersPanel @filter="onFilterCharacter" @search="searchCharacter" />
-    <div class="container">
+    <Spinner v-if="isLoading" />
+    <div v-else class="container">
       <CharacterCard v-for="(card, index) in data" :key="index" :card="card" />
     </div>
-    <div class="footer">
+    <div v-if="!isLoading" class="footer">
       <div class="total">
         Page {{ `${route.query.page || 1} ` }} of {{ totalPages }}
       </div>
@@ -39,12 +40,14 @@ import CharacterService from "@/services/CharacterService";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import { Character } from "../types";
+import Spinner from "@/components/Spinner.vue";
 
 export default defineComponent({
   name: "CharactersView",
   components: {
     CharacterCard,
     FiltersPanel,
+    Spinner,
   },
 
   setup() {
@@ -53,14 +56,18 @@ export default defineComponent({
     const data: Ref<Character[]> = ref([]);
     const totalPages = ref(0);
     const selectedFilter = ref("All");
+    const isLoading = ref(false);
 
     watchEffect(() => {
+      isLoading.value = true;
       CharacterService.getCharacters(+route.query.page! || 1)
         .then((response) => {
           totalPages.value = response.data.info.pages;
           data.value = response.data.results;
+          isLoading.value = false;
         })
         .catch((error) => {
+          isLoading.value = false;
           throw new Error(error);
         });
     });
@@ -112,6 +119,7 @@ export default defineComponent({
       searchCharacter,
       route,
       computedClass,
+      isLoading,
     };
   },
 });

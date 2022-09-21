@@ -14,6 +14,6 @@ export default {
     return apiClient.get("?page=" + page);
   },
   getCharacter(id: number) {
-    return apiClient.get("/events/" + id);
+    return apiClient.get("/" + id);
   },
 };
