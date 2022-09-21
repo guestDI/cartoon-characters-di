@@ -11,7 +11,10 @@
         <span class="desc"
           >Last known location: {{ character.location.name }}</span
         >
-        <span class="desc">First seen in </span>
+        <span class="desc"
+          >First seen in {{ character.episode?.number }} -
+          {{ character.episode?.name }}</span
+        >
       </div>
       <Button @click.prevent="btnProps.handler">{{ btnProps.text }}</Button>
     </div>
@@ -22,7 +25,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watchEffect, ref, computed } from "vue";
+import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
 import Button from "@/components/Button.vue";
 
@@ -35,10 +38,6 @@ export default defineComponent({
   setup(props) {
     let character = ref(props.card);
     const store = useStore();
-
-    watchEffect(() => {
-      character = ref(props.card);
-    });
 
     const addToFavorites = () => {
       store.dispatch("addToFavourites", { value: character.value.id });

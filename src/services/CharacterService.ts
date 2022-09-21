@@ -1,19 +1,10 @@
-import axios from "axios";
-
-const apiClient = axios.create({
-  baseURL: "https://rickandmortyapi.com/api/character",
-  withCredentials: false,
-  headers: {
-    Accept: "application/json",
-    "Content-Type": "application/json",
-  },
-});
+import apiClient from "./axios";
 
 export default {
   getCharacters(page: number) {
-    return apiClient.get("?page=" + page);
+    return apiClient.get("/character?page=" + page);
   },
   getCharacter(id: number) {
-    return apiClient.get("/" + id);
+    return apiClient.get("/character/" + id);
   },
 };

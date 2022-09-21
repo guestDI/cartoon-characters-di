@@ -8,9 +8,10 @@
 
 <script lang="ts">
 import CharacterDetailsCard from "@/components/CharacterDetailsCard.vue";
+import CharacterService from "@/services/CharacterService";
+import EpisodeService from "@/services/EpisodeService";
 import { Character } from "@/types";
-import axios from "axios";
-import { defineComponent, Ref, ref } from "vue";
+import { defineComponent, Ref, ref, watchEffect } from "vue";
 
 export default defineComponent({
   name: "CharactersView",
@@ -23,21 +24,35 @@ export default defineComponent({
     let isLoaded: Ref<boolean> = ref(false);
     const data: Ref<Character | null> = ref(null);
 
-    const getCharacter = async () => {
-      try {
-        isLoaded.value = true;
-        const json = await axios.get(
-          `https://rickandmortyapi.com/api/character/${props.id}`
-        );
-        data.value = json.data;
-        isLoaded.value = false;
-      } catch (e) {
-        isLoaded.value = false;
-        throw new Error("Something went wrong, " + e);
-      }
+    const getEpisodeId = (url: string) => {
+      const index = url.lastIndexOf("/");
+
+      return url.substring(index + 1);
     };
 
-    getCharacter();
+    watchEffect(() => {
+      isLoaded.value = true;
+      CharacterService.getCharacter(props.id)
+        .then((response) => {
+          data.value = response.data;
+          isLoaded.value = false;
+
+          EpisodeService.getEpisode(
+            getEpisodeId(response.data.episode[0])
+          ).then((res) => {
+            if (data.value) {
+              data.value.episode = {
+                name: res.data.name,
+                number: res.data.episode,
+              };
+            }
+          });
+        })
+        .catch((error) => {
+          isLoaded.value = false;
+          throw new Error(error);
+        });
+    });
 
     return { data, isLoaded };
   },
