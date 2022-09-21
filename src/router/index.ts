@@ -8,9 +8,7 @@ const routes: Array<RouteRecordRaw> = [
     path: "/",
     name: "characters",
     component: CharactersView,
-    props: (route) => ({
-      query: { page: parseInt(`${route.query.page}`) || 1 },
-    }),
+    props: (route) => ({ page: parseInt(`${route.query.page}`) || 1 }),
   },
   {
     path: "/character/:id",

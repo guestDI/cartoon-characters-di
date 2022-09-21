@@ -8,15 +8,17 @@
     </div>
     <div class="stat">
       <img src="@/assets/heart.svg" width="20" height="20" />
-      <span> {{ store.getters.favouritesCount }} </span>
+      <span> {{ count }} </span>
     </div>
   </nav>
 </template>
 
 <script setup lang="ts">
 import { useStore } from "vuex";
+import { computed } from "vue";
 
 const store = useStore();
+const count = computed(() => store.getters.favouritesCount);
 </script>
 
 <style lang="scss">

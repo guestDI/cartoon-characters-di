@@ -16,15 +16,15 @@
             path: '/',
             query: { page: parseInt(`${route.query.page}`) - 1 },
           }"
-          v-if="parseInt(`${route.query.page}`) != 1"
-          >Prev</router-link
+          :class="computedClass"
+          ><span>&#171;</span> Prev</router-link
         >
         <router-link
           :to="{
             path: '/',
-            query: { page: parseInt(`${route.query.page}`) + 1 || 1 },
+            query: { page: (parseInt(`${route.query.page}`) || 1) + 1 },
           }"
-          >Next &#62;</router-link
+          >Next <span>&#187;</span></router-link
         >
       </div>
     </div>
@@ -32,7 +32,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, watchEffect } from "vue";
+import { defineComponent, Ref, ref, watchEffect, computed } from "vue";
 import CharacterCard from "@/components/CharacterCard.vue";
 import FiltersPanel from "@/components/FiltersPanel.vue";
 import CharacterService from "@/services/CharacterService";
@@ -46,7 +46,6 @@ export default defineComponent({
     CharacterCard,
     FiltersPanel,
   },
-  props: ["query"],
 
   setup() {
     const route = useRoute();
@@ -64,6 +63,14 @@ export default defineComponent({
         .catch((error) => {
           throw new Error(error);
         });
+    });
+
+    const computedClass = computed(() => {
+      return (
+        (!parseInt(`${route.query.page}`) ||
+          parseInt(`${route.query.page}`) === 1) &&
+        "disabled"
+      );
     });
 
     const onFilterCharacter = async (value: string) => {
@@ -104,6 +111,7 @@ export default defineComponent({
       onFilterCharacter,
       searchCharacter,
       route,
+      computedClass,
     };
   },
 });
@@ -121,13 +129,27 @@ export default defineComponent({
 .footer {
   display: flex;
   justify-content: end;
-  padding: 1rem 3rem;
+  padding: 1rem 4rem;
+  font-size: 0.9rem;
+  font-weight: 500;
 
   .pagination {
     margin-left: 1rem;
 
     a {
       text-decoration: none;
+
+      &:visited {
+        text-decoration: none;
+        color: inherit;
+      }
+    }
+
+    a.disabled {
+      pointer-events: none;
+      cursor: default;
+      text-decoration: none;
+      color: rgb(130, 130, 130);
     }
 
     a:last-of-type {
