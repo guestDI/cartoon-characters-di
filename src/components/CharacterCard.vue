@@ -35,27 +35,12 @@ export default defineComponent({
     const { card } = toRefs(props);
 
     const addToFavorites = (id: number) => {
-      store.commit("addToFavourites", { value: id });
-
-      localStorage.setItem(
-        "favourites",
-        JSON.stringify([...store.state.favourites])
-      );
+      store.dispatch("addToFavourites", { value: id });
     };
 
     const removeFromFavorites = (id: number) => {
-      store.commit("removeFromFavourites", { value: id });
-
-      localStorage.setItem(
-        "favourites",
-        JSON.stringify([...store.state.favourites])
-      );
-
+      store.dispatch("removeFromFavourites", { value: id });
       context.emit("remove", id);
-    };
-
-    const emitCheck = (id: number) => {
-      // context.emit("remove", id);
     };
 
     const btnProps = computed(() => {
@@ -72,7 +57,6 @@ export default defineComponent({
 
     return {
       btnProps,
-      emitCheck,
     };
   },
 });

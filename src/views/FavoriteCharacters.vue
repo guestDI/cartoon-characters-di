@@ -16,12 +16,13 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref } from "vue";
+import { defineComponent, Ref, ref } from "vue";
 import CharacterCard from "@/components/CharacterCard.vue";
 import { useStore } from "vuex";
 import axios from "axios";
 import { useRouter } from "vue-router";
 import Button from "@/components/Button.vue";
+import { Character } from "@/types";
 
 export default defineComponent({
   components: {
@@ -32,9 +33,9 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const store = useStore();
-    let data: any = ref([]);
+    let data: Ref<Character[]> = ref([]);
 
-    const getCharacters = async (ids: any) => {
+    const getCharacters = async (ids: string) => {
       try {
         const json = await axios.get(
           `https://rickandmortyapi.com/api/character/${ids}`
@@ -55,7 +56,7 @@ export default defineComponent({
     }
 
     const onRemove = (val: number) => {
-      const index = data.value.findIndex((card: any) => card.id === val);
+      const index = data.value.findIndex((card: Character) => card.id === val);
 
       data.value.splice(index, 1);
     };
@@ -70,5 +71,6 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
 }
 </style>

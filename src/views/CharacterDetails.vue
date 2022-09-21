@@ -8,6 +8,7 @@
 
 <script lang="ts">
 import CharacterDetailsCard from "@/components/CharacterDetailsCard.vue";
+import { Character } from "@/types";
 import axios from "axios";
 import { defineComponent, Ref, ref } from "vue";
 
@@ -20,7 +21,7 @@ export default defineComponent({
 
   setup(props) {
     let isLoaded: Ref<boolean> = ref(false);
-    const data: any = ref(null);
+    const data: Ref<Character | null> = ref(null);
 
     const getCharacter = async () => {
       try {

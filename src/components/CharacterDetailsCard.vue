@@ -41,21 +41,11 @@ export default defineComponent({
     });
 
     const addToFavorites = () => {
-      store.commit("addToFavourites", { value: character.value.id });
-
-      localStorage.setItem(
-        "favourites",
-        JSON.stringify([...store.state.favourites])
-      );
+      store.dispatch("addToFavourites", { value: character.value.id });
     };
 
     const removeFromFavorites = () => {
-      store.commit("removeFromFavourites", { value: character.value.id });
-
-      localStorage.setItem(
-        "favourites",
-        JSON.stringify([...store.state.favourites])
-      );
+      store.dispatch("removeFromFavourites", { value: character.value.id });
     };
 
     const btnProps = computed(() => {
