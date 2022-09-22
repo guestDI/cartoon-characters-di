@@ -40,7 +40,7 @@ import CharacterService from "@/services/CharacterService";
 import axios from "axios";
 import { useRoute } from "vue-router";
 import { Character } from "../types";
-import Spinner from "@/components/Spinner.vue";
+import Spinner from "@/components/shared/Spinner.vue";
 
 export default defineComponent({
   name: "CharactersView",

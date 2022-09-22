@@ -34,7 +34,7 @@
 <script lang="ts">
 import { defineComponent, ref } from "vue";
 import RadioButton from "@/components/RadioButton.vue";
-import Button from "@/components/Button.vue";
+import Button from "@/components/shared/Button.vue";
 import { SpeciesFilter } from "@/types";
 
 export default defineComponent({

@@ -27,7 +27,7 @@
 <script lang="ts">
 import { defineComponent, ref, computed } from "vue";
 import { useStore } from "vuex";
-import Button from "@/components/Button.vue";
+import Button from "@/components/shared/Button.vue";
 
 export default defineComponent({
   components: {

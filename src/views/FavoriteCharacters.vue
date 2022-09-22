@@ -21,7 +21,7 @@ import CharacterCard from "@/components/CharacterCard.vue";
 import { useStore } from "vuex";
 import axios from "axios";
 import { useRouter } from "vue-router";
-import Button from "@/components/Button.vue";
+import Button from "@/components/shared/Button.vue";
 import { Character } from "@/types";
 
 export default defineComponent({

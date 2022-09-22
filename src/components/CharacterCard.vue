@@ -20,7 +20,7 @@
 <script lang="ts">
 import { defineComponent, toRefs, computed } from "vue";
 import { useStore } from "vuex";
-import Button from "@/components/Button.vue";
+import Button from "@/components/shared/Button.vue";
 
 export default defineComponent({
   props: ["card"],
