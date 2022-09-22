@@ -12,6 +12,7 @@ import CharacterService from "@/services/CharacterService";
 import EpisodeService from "@/services/EpisodeService";
 import { Character } from "@/types";
 import { defineComponent, Ref, ref, watchEffect } from "vue";
+import { useRouter } from "vue-router";
 
 export default defineComponent({
   name: "CharactersView",
@@ -23,6 +24,7 @@ export default defineComponent({
   setup(props) {
     let isLoaded: Ref<boolean> = ref(false);
     const data: Ref<Character | null> = ref(null);
+    const router = useRouter();
 
     const getEpisodeId = (url: string) => {
       const index = url.lastIndexOf("/");
@@ -37,20 +39,29 @@ export default defineComponent({
           data.value = response.data;
           isLoaded.value = false;
 
-          EpisodeService.getEpisode(
-            getEpisodeId(response.data.episode[0])
-          ).then((res) => {
-            if (data.value) {
-              data.value.episode = {
-                name: res.data.name,
-                number: res.data.episode,
-              };
-            }
-          });
+          EpisodeService.getEpisode(getEpisodeId(response.data.episode[0]))
+            .then((res) => {
+              if (data.value) {
+                data.value.episode = {
+                  name: res.data.name,
+                  number: res.data.episode,
+                };
+              }
+            })
+            .catch(() => {
+              if (data.value) {
+                data.value.episode = {
+                  name: "N/A",
+                  number: "N/A",
+                };
+              }
+            });
         })
-        .catch((error) => {
-          isLoaded.value = false;
-          throw new Error(error);
+        .catch(() => {
+          router.push({
+            name: "404",
+            params: { resource: "character" },
+          });
         });
     });
 

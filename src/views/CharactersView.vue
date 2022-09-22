@@ -17,7 +17,7 @@
             path: '/',
             query: { page: parseInt(`${route.query.page}`) - 1 },
           }"
-          :class="computedClass"
+          :class="isPrevDisabled && 'disabled'"
           ><span>&#171;</span> Prev</router-link
         >
         <router-link
@@ -25,6 +25,7 @@
             path: '/',
             query: { page: (parseInt(`${route.query.page}`) || 1) + 1 },
           }"
+          :class="isNextDisabled && 'disabled'"
           >Next <span>&#187;</span></router-link
         >
       </div>
@@ -57,10 +58,11 @@ export default defineComponent({
     const totalPages = ref(0);
     const selectedFilter = ref("All");
     const isLoading = ref(false);
+    const query = ref("");
 
     watchEffect(() => {
       isLoading.value = true;
-      CharacterService.getCharacters(+route.query.page! || 1)
+      CharacterService.filterCharacters(+route.query.page! || 1, query.value)
         .then((response) => {
           totalPages.value = response.data.info.pages;
           data.value = response.data.results;
@@ -72,7 +74,11 @@ export default defineComponent({
         });
     });
 
-    const computedClass = computed(() => {
+    const isNextDisabled = computed(() => {
+      return parseInt(`${route.query.page}`) === totalPages.value && "disabled";
+    });
+
+    const isPrevDisabled = computed(() => {
       return (
         (!parseInt(`${route.query.page}`) ||
           parseInt(`${route.query.page}`) === 1) &&
@@ -82,17 +88,16 @@ export default defineComponent({
 
     const onFilterCharacter = async (value: string) => {
       selectedFilter.value = value;
-      const searchQuery = value === "All" ? "" : `?species=${value}`;
+      query.value = value === "All" ? "" : `species=${value}`;
 
-      try {
-        const json = await axios.get(
-          `https://rickandmortyapi.com/api/character${searchQuery}`
-        );
-        totalPages.value = json.data.info.pages;
-        data.value = json.data.results;
-      } catch (e) {
-        throw new Error("Something went wrong, " + e);
-      }
+      CharacterService.filterCharacters(+route.query.page! || 1, query.value)
+        .then((response) => {
+          totalPages.value = response.data.info.pages;
+          data.value = response.data.results;
+        })
+        .catch((error) => {
+          throw new Error(error);
+        });
     };
 
     const searchCharacter = async (value: string) => {
@@ -118,7 +123,8 @@ export default defineComponent({
       onFilterCharacter,
       searchCharacter,
       route,
-      computedClass,
+      isNextDisabled,
+      isPrevDisabled,
       isLoading,
     };
   },

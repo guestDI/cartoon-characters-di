@@ -4,22 +4,22 @@
   <div class="card">
     <div class="content">
       <div class="details">
-        <h1 class="name">{{ character.name }}</h1>
+        <h1 class="name">{{ character?.name }}</h1>
         <span class="desc"
-          >{{ character.species }} - {{ character.status }}</span
+          >{{ character?.species }} - {{ character?.status }}</span
         >
         <span class="desc"
-          >Last known location: {{ character.location.name }}</span
+          >Last known location: {{ character?.location?.name }}</span
         >
         <span class="desc"
-          >First seen in {{ character.episode?.number }} -
-          {{ character.episode?.name }}</span
+          >First seen in {{ character?.episode?.number }} -
+          {{ character?.episode?.name }}</span
         >
       </div>
       <Button @click.prevent="btnProps.handler">{{ btnProps.text }}</Button>
     </div>
     <div class="img">
-      <img :alt="character.name" :src="character.image" />
+      <img :alt="character?.name" :src="character?.image" />
     </div>
   </div>
 </template>

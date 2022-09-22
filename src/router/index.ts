@@ -2,6 +2,7 @@ import { createRouter, createWebHistory, RouteRecordRaw } from "vue-router";
 import CharactersView from "../views/CharactersView.vue";
 import CharacterDetails from "../views/CharacterDetails.vue";
 import FavoriteCharacters from "../views/FavoriteCharacters.vue";
+import NotFound from "@/views/NotFound.vue";
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -20,6 +21,17 @@ const routes: Array<RouteRecordRaw> = [
     path: "/favourites",
     name: "favourites",
     component: FavoriteCharacters,
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: "notFound",
+    component: NotFound,
+  },
+  {
+    path: "/404/:resource",
+    name: "404",
+    component: NotFound,
+    props: true,
   },
 ];
 
