@@ -8,6 +8,6 @@ export default {
     return apiClient.get("/character/" + id);
   },
   filterCharacters(page: number, query = "") {
-    return apiClient.get("/character?page=" + page + "&" + query);
+    return apiClient.get("/character?page=" + page + query);
   },
 };
