@@ -1,5 +1,6 @@
 import { Character } from "@/types";
 import { createStore } from "vuex";
+import { MutationTypes } from "../types";
 
 interface State {
   favourites: number[];
@@ -14,14 +15,14 @@ export default createStore<State>({
     };
   },
   mutations: {
-    ADD_TO_FAVOURITES(state, payload) {
+    [MutationTypes.ADD_TO_FAVOURITES](state, payload) {
       state.favourites.push(payload.value.id);
       state.favouriteCharacters.push(payload.value);
     },
-    LOAD_FAVOURITES(state, payload) {
+    [MutationTypes.LOAD_FAVOURITES](state, payload) {
       state.favouriteCharacters.push(...payload.value);
     },
-    REMOVE_FROM_FAVOURITES(state, payload) {
+    [MutationTypes.REMOVE_FROM_FAVOURITES](state, payload) {
       const index = state.favourites.indexOf(payload.value);
       if (index > -1) {
         state.favourites.splice(index, 1);
@@ -39,10 +40,10 @@ export default createStore<State>({
         JSON.stringify([...context.state.favourites, payload.value.id])
       );
 
-      context.commit("ADD_TO_FAVOURITES", payload);
+      context.commit(MutationTypes.ADD_TO_FAVOURITES, payload);
     },
     removeFromFavourites(context, payload) {
-      context.commit("REMOVE_FROM_FAVOURITES", payload);
+      context.commit(MutationTypes.REMOVE_FROM_FAVOURITES, payload);
 
       localStorage.setItem(
         "favourites",
@@ -50,14 +51,14 @@ export default createStore<State>({
       );
     },
     loadCharacters(context, payload) {
-      context.commit("LOAD_FAVOURITES", payload);
+      context.commit(MutationTypes.LOAD_FAVOURITES, payload);
     },
   },
   getters: {
-    favouritesCount(state) {
+    favouritesCount(state): number {
       return state.favourites.length;
     },
-    favouriteCharacters(state) {
+    favouriteCharacters(state): Character[] {
       return state.favouriteCharacters;
     },
   },

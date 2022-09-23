@@ -72,7 +72,7 @@ export default defineComponent({
     watchEffect(() => {
       isLoading.value = true;
       CharacterService.filterCharacters(
-        +route.query.page! || 1,
+        parseInt(route.query.page?.toString() || "1"),
         `${filter.value} ${searchKeyword.value}`
       )
         .then((response) => {

@@ -21,3 +21,9 @@ export interface Character {
 export type Species = "Human" | "Alien" | "Animal";
 
 export type SpeciesFilter = Species | "All";
+
+export enum MutationTypes {
+  ADD_TO_FAVOURITES = "ADD_TO_FAVOURITES",
+  LOAD_FAVOURITES = "LOAD_FAVOURITES",
+  REMOVE_FROM_FAVOURITES = "REMOVE_FROM_FAVOURITES",
+}

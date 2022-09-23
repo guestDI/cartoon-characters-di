@@ -1,11 +1,12 @@
 <!-- @format -->
 
 <template>
-  <div class="container">
-    <div v-if="store.getters.favouritesCount === 0" class="empty">
-      <h3>{{ noFavouritesMessage }}</h3>
-      <Button @click="$router.back">Go back</Button>
-    </div>
+  <div v-if="store.getters.favouritesCount === 0" class="empty">
+    <h3>{{ noFavouritesMessage }}</h3>
+    <Button @click="$router.back">Go back</Button>
+  </div>
+  <Spinner v-else-if="isLoading" />
+  <div v-else class="container">
     <CharacterCard
       v-for="(card, index) in data"
       :key="index"
@@ -23,21 +24,26 @@ import { useStore } from "vuex";
 import Button from "@/components/shared/Button.vue";
 import { Character } from "@/types";
 import CharacterService from "@/services/CharacterService";
+import Spinner from "@/components/shared/Spinner.vue";
 
 export default defineComponent({
   components: {
     CharacterCard,
     Button,
+    Spinner,
   },
 
   setup() {
     const store = useStore();
     let data: Ref<Character[]> = ref([]);
     let noFavouritesMessage = ref("No favourite characters");
+    let isLoading = ref(false);
 
     const getCharacters = (ids: string) => {
+      isLoading.value = true;
       CharacterService.getCharactersByIds(ids)
         .then((response) => {
+          isLoading.value = false;
           if (!Array.isArray(response.data)) {
             store.dispatch("loadCharacters", { value: [response.data] });
           } else {
@@ -45,6 +51,7 @@ export default defineComponent({
           }
         })
         .catch((error) => {
+          isLoading.value = false;
           noFavouritesMessage.value = "Something went wrong";
           throw new Error(error);
         });
@@ -76,6 +83,7 @@ export default defineComponent({
       getPrimaryActionHandler,
       getPrimaryActionText,
       noFavouritesMessage,
+      isLoading,
     };
   },
 });
