@@ -16,7 +16,7 @@
           {{ character?.episode?.name }}</span
         >
       </div>
-      <Button @click.prevent="btnProps.handler">{{ btnProps.text }}</Button>
+      <Button @click.prevent="btnAction">{{ btnText }}</Button>
     </div>
     <div class="img">
       <img :alt="character?.name" :src="character?.image" />
@@ -25,37 +25,23 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, computed } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, ref, toRefs } from "vue";
 import Button from "@/components/shared/Button.vue";
 
 export default defineComponent({
   components: {
     Button,
   },
-  props: ["card"],
+  props: ["card", "primaryAction", "primaryActionText"],
 
   setup(props) {
     let character = ref(props.card);
-    const store = useStore();
-
-    const addToFavorites = () => {
-      store.dispatch("addToFavourites", { value: character.value.id });
-    };
-
-    const removeFromFavorites = () => {
-      store.dispatch("removeFromFavourites", { value: character.value.id });
-    };
-
-    const btnProps = computed(() => {
-      return store.state.favourites.includes(character?.value.id)
-        ? { handler: removeFromFavorites, text: "Remove from favorites" }
-        : { handler: addToFavorites, text: "Add to favorites" };
-    });
+    const { primaryAction, primaryActionText } = toRefs(props);
 
     return {
       character,
-      btnProps,
+      btnAction: primaryAction,
+      btnText: primaryActionText,
     };
   },
 });

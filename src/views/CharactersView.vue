@@ -6,7 +6,13 @@
     <Spinner v-if="isLoading" />
     <h3 v-else-if="!data.length">Oops. There is nothing to see.</h3>
     <div v-else class="container">
-      <CharacterCard v-for="(card, index) in data" :key="index" :card="card" />
+      <CharacterCard
+        v-for="(card, index) in data"
+        :key="index"
+        :card="card"
+        :primary-action="getPrimaryActionHandler(card)"
+        :primary-action-text="getPrimaryActionText(card)"
+      />
     </div>
     <div v-if="!isLoading" class="footer">
       <div class="total">
@@ -41,6 +47,7 @@ import FiltersPanel from "@/components/FiltersPanel.vue";
 import CharacterService from "@/services/CharacterService";
 import { useRoute, useRouter } from "vue-router";
 import { Character, SpeciesFilter } from "../types";
+import { useStore } from "vuex";
 import Spinner from "@/components/shared/Spinner.vue";
 
 export default defineComponent({
@@ -54,6 +61,7 @@ export default defineComponent({
   setup() {
     const route = useRoute();
     const router = useRouter();
+    const store = useStore();
 
     const data: Ref<Character[]> = ref([]);
     const totalPages = ref(0);
@@ -100,6 +108,26 @@ export default defineComponent({
       router.push({ query: { page: 1 } });
     };
 
+    const addToFavorites = (card: Character) => {
+      store.dispatch("addToFavourites", { value: card });
+    };
+
+    const removeFromFavorites = (id: number) => {
+      store.dispatch("removeFromFavourites", { value: id });
+    };
+
+    const getPrimaryActionHandler = (card: Character) => {
+      return store.state.favourites.includes(card?.id)
+        ? () => removeFromFavorites(card?.id)
+        : () => addToFavorites(card);
+    };
+
+    const getPrimaryActionText = (card: Character) => {
+      return store.state.favourites.includes(card?.id)
+        ? "Remove from favorites"
+        : "Add to favorites";
+    };
+
     return {
       data,
       totalPages,
@@ -109,6 +137,8 @@ export default defineComponent({
       isNextDisabled,
       isPrevDisabled,
       isLoading,
+      getPrimaryActionHandler,
+      getPrimaryActionText,
     };
   },
 });

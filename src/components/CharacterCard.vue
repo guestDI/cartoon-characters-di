@@ -11,52 +11,33 @@
           <span class="name">{{ card.name }}</span>
           <span class="desc">{{ card.species }} - {{ card.status }}</span>
         </div>
-        <Button @click.prevent="btnProps.handler">{{ btnProps.text }}</Button>
+        <Button @click.prevent="btnAction">{{ btnText }}</Button>
       </div>
     </div>
   </router-link>
 </template>
 
 <script lang="ts">
-import { defineComponent, toRefs, computed } from "vue";
-import { useStore } from "vuex";
+import { defineComponent, toRefs } from "vue";
 import Button from "@/components/shared/Button.vue";
 
+// interface Props {
+//   option: SpeciesFilter;
+//   checked: boolean;
+// }
+
 export default defineComponent({
-  props: ["card"],
-  emits: ["remove"],
+  props: ["card", "primaryAction", "primaryActionText"],
   components: {
     Button,
   },
 
-  setup(props, context) {
-    const store = useStore();
-
-    const { card } = toRefs(props);
-
-    const addToFavorites = (id: number) => {
-      store.dispatch("addToFavourites", { value: id });
-    };
-
-    const removeFromFavorites = (id: number) => {
-      store.dispatch("removeFromFavourites", { value: id });
-      context.emit("remove", id);
-    };
-
-    const btnProps = computed(() => {
-      return store.state.favourites.includes(card?.value.id)
-        ? {
-            handler: () => removeFromFavorites(card?.value.id),
-            text: "Remove from favorites",
-          }
-        : {
-            handler: () => addToFavorites(card?.value.id),
-            text: "Add to favorites",
-          };
-    });
+  setup(props) {
+    const { primaryAction, primaryActionText } = toRefs(props);
 
     return {
-      btnProps,
+      btnAction: primaryAction,
+      btnText: primaryActionText,
     };
   },
 });

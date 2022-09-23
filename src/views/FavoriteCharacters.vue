@@ -4,23 +4,23 @@
   <div class="container">
     <div v-if="store.getters.favouritesCount === 0" class="empty">
       <h3>No favourite characters</h3>
-      <Button @click="router.back">Go back</Button>
+      <Button @click="$router.back">Go back</Button>
     </div>
     <CharacterCard
       v-for="(card, index) in data"
       :key="index"
       :card="card"
-      @remove="onRemove"
+      :primary-action="getPrimaryActionHandler(card)"
+      :primary-action-text="getPrimaryActionText(card)"
     />
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref } from "vue";
+import { defineComponent, Ref, ref, watchEffect } from "vue";
 import CharacterCard from "@/components/CharacterCard.vue";
 import { useStore } from "vuex";
 import axios from "axios";
-import { useRouter } from "vue-router";
 import Button from "@/components/shared/Button.vue";
 import { Character } from "@/types";
 
@@ -31,7 +31,6 @@ export default defineComponent({
   },
 
   setup() {
-    const router = useRouter();
     const store = useStore();
     let data: Ref<Character[]> = ref([]);
 
@@ -42,26 +41,41 @@ export default defineComponent({
         );
 
         if (!Array.isArray(json.data)) {
-          data.value = [json.data];
+          store.dispatch("loadCharacters", { value: [json.data] });
         } else {
-          data.value = json.data;
+          store.dispatch("loadCharacters", { value: json.data });
         }
       } catch (e) {
         throw new Error("Something went wrong, " + e);
       }
     };
 
-    if (store.getters.favouritesCount) {
+    if (!store.getters.favouriteCharacters.length) {
       getCharacters(store.state.favourites);
     }
 
-    const onRemove = (val: number) => {
-      const index = data.value.findIndex((card: Character) => card.id === val);
+    watchEffect(() => {
+      data.value = store.getters.favouriteCharacters;
+    });
 
-      data.value.splice(index, 1);
+    const getPrimaryActionHandler = (card: Character) => {
+      return store.state.favourites.includes(card?.id)
+        ? () => store.dispatch("removeFromFavourites", { value: card.id })
+        : () => store.dispatch("addToFavourites", { value: card });
     };
 
-    return { data, router, store, onRemove };
+    const getPrimaryActionText = (card: Character) => {
+      return store.state.favourites.includes(card?.id)
+        ? "Remove from favorites"
+        : "Add to favorites";
+    };
+
+    return {
+      data,
+      store,
+      getPrimaryActionHandler,
+      getPrimaryActionText,
+    };
   },
 });
 </script>

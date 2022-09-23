@@ -2,7 +2,12 @@
 
 <template>
   <div class="container">
-    <CharacterDetailsCard v-if="!isLoaded" :card="data" />
+    <CharacterDetailsCard
+      v-if="!isLoaded"
+      :card="data"
+      :primary-action-text="getPrimaryActionText(data)"
+      :primary-action="getPrimaryActionHandler(data)"
+    />
   </div>
 </template>
 
@@ -13,6 +18,7 @@ import { Character } from "@/types";
 import axios from "axios";
 import { defineComponent, Ref, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
+import { useStore } from "vuex";
 
 export default defineComponent({
   name: "CharactersView",
@@ -25,6 +31,7 @@ export default defineComponent({
     let isLoaded: Ref<boolean> = ref(true);
     const data: Ref<Character | null> = ref(null);
     const router = useRouter();
+    const store = useStore();
 
     watchEffect(() => {
       CharacterService.getCharacter(props.id)
@@ -59,7 +66,27 @@ export default defineComponent({
         });
     });
 
-    return { data, isLoaded };
+    const addToFavorites = (card: Character) => {
+      store.dispatch("addToFavourites", { value: card });
+    };
+
+    const removeFromFavorites = (id: number) => {
+      store.dispatch("removeFromFavourites", { value: id });
+    };
+
+    const getPrimaryActionHandler = (card: Character) => {
+      return store.state.favourites.includes(card?.id)
+        ? () => removeFromFavorites(card?.id)
+        : () => addToFavorites(card);
+    };
+
+    const getPrimaryActionText = (card: Character) => {
+      return store.state.favourites.includes(card?.id)
+        ? "Remove from favorites"
+        : "Add to favorites";
+    };
+
+    return { data, isLoaded, getPrimaryActionHandler, getPrimaryActionText };
   },
 });
 </script>
