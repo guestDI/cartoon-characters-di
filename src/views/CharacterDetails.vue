@@ -9,8 +9,8 @@
 <script lang="ts">
 import CharacterDetailsCard from "@/components/CharacterDetailsCard.vue";
 import CharacterService from "@/services/CharacterService";
-import EpisodeService from "@/services/EpisodeService";
 import { Character } from "@/types";
+import axios from "axios";
 import { defineComponent, Ref, ref, watchEffect } from "vue";
 import { useRouter } from "vue-router";
 
@@ -22,24 +22,18 @@ export default defineComponent({
   props: ["id", "card"],
 
   setup(props) {
-    let isLoaded: Ref<boolean> = ref(false);
+    let isLoaded: Ref<boolean> = ref(true);
     const data: Ref<Character | null> = ref(null);
     const router = useRouter();
 
-    const getEpisodeId = (url: string) => {
-      const index = url.lastIndexOf("/");
-
-      return url.substring(index + 1);
-    };
-
     watchEffect(() => {
-      isLoaded.value = true;
       CharacterService.getCharacter(props.id)
         .then((response) => {
           data.value = response.data;
           isLoaded.value = false;
 
-          EpisodeService.getEpisode(getEpisodeId(response.data.episode[0]))
+          axios
+            .get(response.data.episode[0])
             .then((res) => {
               if (data.value) {
                 data.value.episode = {

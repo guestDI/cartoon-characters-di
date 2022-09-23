@@ -6,7 +6,7 @@
       <router-link to="/">Characters</router-link> |
       <router-link to="/favourites">Favourites</router-link>
     </div>
-    <div class="stat">
+    <div class="fav">
       <img src="@/assets/heart.svg" width="20" height="20" />
       <span> {{ count }} </span>
     </div>
@@ -38,7 +38,7 @@ nav {
     }
   }
 
-  .stat {
+  .fav {
     display: flex;
     align-items: center;
     color: #fff;

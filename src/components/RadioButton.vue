@@ -7,7 +7,7 @@
     name="radioCharacter"
     :value="option"
     :checked="checked"
-    @change="emit('input', ($event?.target as HTMLInputElement).value)"
+    @change="emit('onChange', ($event?.target as HTMLInputElement).value)"
   />
   <label :for="option">{{ option }}</label>
 </template>
@@ -22,7 +22,7 @@ interface Props {
 }
 
 defineProps<Props>();
-const emit = defineEmits(["input"]);
+const emit = defineEmits(["onChange"]);
 </script>
 
 <style scoped lang="scss">

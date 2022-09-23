@@ -4,24 +4,11 @@
   <div class="panel">
     <div class="radio-toolbar">
       <RadioButton
-        option="All"
-        @input="changeFilter"
-        :checked="isChecked('All')"
-      />
-      <RadioButton
-        option="Human"
-        @input="changeFilter"
-        :checked="isChecked('Human')"
-      />
-      <RadioButton
-        option="Animal"
-        @input="changeFilter"
-        :checked="isChecked('Animal')"
-      />
-      <RadioButton
-        option="Alien"
-        @input="changeFilter"
-        :checked="isChecked('Alien')"
+        v-for="(option, index) in options"
+        :key="index"
+        :option="option"
+        @onChange="changeFilter"
+        :checked="isChecked(option)"
       />
     </div>
     <div class="search">
@@ -45,6 +32,7 @@ export default defineComponent({
   emits: ["filter", "search"],
 
   setup(_, { emit }) {
+    const options: SpeciesFilter[] = ["All", "Human", "Animal", "Alien"];
     let selectedFilter = ref("All");
     let keyword = ref("");
 
@@ -60,6 +48,7 @@ export default defineComponent({
     const isChecked = (value: SpeciesFilter) => value === selectedFilter.value;
 
     return {
+      options,
       keyword,
       changeFilter,
       selectedFilter,

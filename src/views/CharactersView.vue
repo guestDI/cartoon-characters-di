@@ -4,6 +4,7 @@
   <div>
     <FiltersPanel @filter="filterCharacter" @search="searchCharacter" />
     <Spinner v-if="isLoading" />
+    <h3 v-else-if="!data.length">Oops. There is nothing to see.</h3>
     <div v-else class="container">
       <CharacterCard v-for="(card, index) in data" :key="index" :card="card" />
     </div>
@@ -56,7 +57,6 @@ export default defineComponent({
 
     const data: Ref<Character[]> = ref([]);
     const totalPages = ref(0);
-    const selectedFilter = ref("All");
     const isLoading = ref(false);
     const filter = ref("");
     const searchKeyword = ref("");
@@ -135,6 +135,7 @@ export default defineComponent({
 
     a {
       text-decoration: none;
+      color: inherit;
 
       &:visited {
         text-decoration: none;
