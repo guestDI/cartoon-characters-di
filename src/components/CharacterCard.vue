@@ -21,11 +21,6 @@
 import { defineComponent, toRefs } from "vue";
 import Button from "@/components/shared/Button.vue";
 
-// interface Props {
-//   option: SpeciesFilter;
-//   checked: boolean;
-// }
-
 export default defineComponent({
   props: ["card", "primaryAction", "primaryActionText"],
   components: {

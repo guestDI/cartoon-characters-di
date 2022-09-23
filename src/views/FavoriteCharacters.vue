@@ -3,7 +3,7 @@
 <template>
   <div class="container">
     <div v-if="store.getters.favouritesCount === 0" class="empty">
-      <h3>No favourite characters</h3>
+      <h3>{{ noFavouritesMessage }}</h3>
       <Button @click="$router.back">Go back</Button>
     </div>
     <CharacterCard
@@ -20,9 +20,9 @@
 import { defineComponent, Ref, ref, watchEffect } from "vue";
 import CharacterCard from "@/components/CharacterCard.vue";
 import { useStore } from "vuex";
-import axios from "axios";
 import Button from "@/components/shared/Button.vue";
 import { Character } from "@/types";
+import CharacterService from "@/services/CharacterService";
 
 export default defineComponent({
   components: {
@@ -33,21 +33,21 @@ export default defineComponent({
   setup() {
     const store = useStore();
     let data: Ref<Character[]> = ref([]);
+    let noFavouritesMessage = ref("No favourite characters");
 
-    const getCharacters = async (ids: string) => {
-      try {
-        const json = await axios.get(
-          `https://rickandmortyapi.com/api/character/${ids}`
-        );
-
-        if (!Array.isArray(json.data)) {
-          store.dispatch("loadCharacters", { value: [json.data] });
-        } else {
-          store.dispatch("loadCharacters", { value: json.data });
-        }
-      } catch (e) {
-        throw new Error("Something went wrong, " + e);
-      }
+    const getCharacters = (ids: string) => {
+      CharacterService.getCharactersByIds(ids)
+        .then((response) => {
+          if (!Array.isArray(response.data)) {
+            store.dispatch("loadCharacters", { value: [response.data] });
+          } else {
+            store.dispatch("loadCharacters", { value: response.data });
+          }
+        })
+        .catch((error) => {
+          noFavouritesMessage.value = "Something went wrong";
+          throw new Error(error);
+        });
     };
 
     if (!store.getters.favouriteCharacters.length) {
@@ -75,6 +75,7 @@ export default defineComponent({
       store,
       getPrimaryActionHandler,
       getPrimaryActionText,
+      noFavouritesMessage,
     };
   },
 });

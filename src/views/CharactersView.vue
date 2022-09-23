@@ -80,9 +80,8 @@ export default defineComponent({
           data.value = response.data.results;
           isLoading.value = false;
         })
-        .catch((error) => {
+        .catch(() => {
           isLoading.value = false;
-          throw new Error(error);
         });
     });
 
@@ -108,18 +107,10 @@ export default defineComponent({
       router.push({ query: { page: 1 } });
     };
 
-    const addToFavorites = (card: Character) => {
-      store.dispatch("addToFavourites", { value: card });
-    };
-
-    const removeFromFavorites = (id: number) => {
-      store.dispatch("removeFromFavourites", { value: id });
-    };
-
     const getPrimaryActionHandler = (card: Character) => {
       return store.state.favourites.includes(card?.id)
-        ? () => removeFromFavorites(card?.id)
-        : () => addToFavorites(card);
+        ? () => store.dispatch("removeFromFavourites", { value: card.id })
+        : () => store.dispatch("addToFavourites", { value: card });
     };
 
     const getPrimaryActionText = (card: Character) => {

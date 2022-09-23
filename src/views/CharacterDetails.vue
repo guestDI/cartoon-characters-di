@@ -29,7 +29,7 @@ export default defineComponent({
 
   setup(props) {
     let isLoaded: Ref<boolean> = ref(true);
-    const data: Ref<Character | null> = ref(null);
+    const data: Ref<Character> = ref({} as Character);
     const router = useRouter();
     const store = useStore();
 
@@ -66,18 +66,10 @@ export default defineComponent({
         });
     });
 
-    const addToFavorites = (card: Character) => {
-      store.dispatch("addToFavourites", { value: card });
-    };
-
-    const removeFromFavorites = (id: number) => {
-      store.dispatch("removeFromFavourites", { value: id });
-    };
-
     const getPrimaryActionHandler = (card: Character) => {
       return store.state.favourites.includes(card?.id)
-        ? () => removeFromFavorites(card?.id)
-        : () => addToFavorites(card);
+        ? () => store.dispatch("removeFromFavourites", { value: card.id })
+        : () => store.dispatch("addToFavourites", { value: card });
     };
 
     const getPrimaryActionText = (card: Character) => {
