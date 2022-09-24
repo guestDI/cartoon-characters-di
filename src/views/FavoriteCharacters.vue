@@ -1,14 +1,14 @@
 <!-- @format -->
 
 <template>
-  <div v-if="store.getters.favouritesCount === 0" class="empty">
+  <div v-if="favouritesCount === 0" class="empty">
     <h3>{{ noFavouritesMessage }}</h3>
     <Button @click="$router.back">Go back</Button>
   </div>
   <Spinner v-else-if="isLoading" />
   <div v-else class="container">
     <CharacterCard
-      v-for="(card, index) in data"
+      v-for="(card, index) in favouriteCharacters"
       :key="index"
       :card="card"
       :primary-action="getPrimaryActionHandler(card)"
@@ -18,7 +18,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, Ref, ref, watchEffect } from "vue";
+import { defineComponent, Ref, ref, computed } from "vue";
 import CharacterCard from "@/components/CharacterCard.vue";
 import { useStore } from "vuex";
 import Button from "@/components/shared/Button.vue";
@@ -61,9 +61,11 @@ export default defineComponent({
       getCharacters(store.state.favourites);
     }
 
-    watchEffect(() => {
-      data.value = store.getters.favouriteCharacters;
-    });
+    const favouritesCount = computed(() => store.getters.favouritesCount);
+
+    const favouriteCharacters = computed(
+      () => store.getters.favouriteCharacters as Character[]
+    );
 
     const getPrimaryActionHandler = (card: Character) => {
       return store.state.favourites.includes(card?.id)
@@ -79,11 +81,12 @@ export default defineComponent({
 
     return {
       data,
-      store,
       getPrimaryActionHandler,
       getPrimaryActionText,
       noFavouritesMessage,
       isLoading,
+      favouriteCharacters,
+      favouritesCount,
     };
   },
 });
