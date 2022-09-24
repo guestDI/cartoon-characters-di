@@ -23,7 +23,6 @@ import CharacterCard from "@/components/CharacterCard.vue";
 import { useStore } from "vuex";
 import Button from "@/components/shared/Button.vue";
 import { Character } from "@/types";
-import CharacterService from "@/services/CharacterService";
 import Spinner from "@/components/shared/Spinner.vue";
 
 export default defineComponent({
@@ -39,26 +38,8 @@ export default defineComponent({
     let noFavouritesMessage = ref("No favourite characters");
     let isLoading = ref(false);
 
-    const getCharacters = (ids: string) => {
-      isLoading.value = true;
-      CharacterService.getCharactersByIds(ids)
-        .then((response) => {
-          isLoading.value = false;
-          if (!Array.isArray(response.data)) {
-            store.dispatch("loadCharacters", { value: [response.data] });
-          } else {
-            store.dispatch("loadCharacters", { value: response.data });
-          }
-        })
-        .catch((error) => {
-          isLoading.value = false;
-          noFavouritesMessage.value = "Something went wrong";
-          throw new Error(error);
-        });
-    };
-
-    if (!store.getters.favouriteCharacters.length) {
-      getCharacters(store.state.favourites);
+    if (!store.getters.initialLoad) {
+      store.dispatch("loadCharacters");
     }
 
     const favouritesCount = computed(() => store.getters.favouritesCount);

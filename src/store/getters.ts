@@ -14,4 +14,7 @@ export const getters: GetterTree<State, State> & Getters = {
   favouriteCharacters(state): Character[] {
     return state.favouriteCharacters;
   },
+  initialLoad(state): boolean {
+    return state.initialLoad;
+  },
 };

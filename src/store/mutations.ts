@@ -8,10 +8,7 @@ export const mutations: MutationTree<State> = {
     state.favouriteCharacters.push(payload.value);
   },
   [MutationTypes.LOAD_FAVOURITES](state, payload: { value: Character[] }) {
-    state.favouriteCharacters = [
-      ...state.favouriteCharacters,
-      ...payload.value,
-    ];
+    state.favouriteCharacters = [...payload.value];
     state.initialLoad = true;
   },
   [MutationTypes.REMOVE_FROM_FAVOURITES](state, payload: { value: number }) {
