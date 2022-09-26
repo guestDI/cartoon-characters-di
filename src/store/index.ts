@@ -9,6 +9,7 @@ export interface State {
   favourites: number[];
   favouriteCharacters: Character[];
   initialLoad: boolean;
+  favouritesAreLoading: boolean;
 }
 
 export default createStore<State>({
@@ -17,6 +18,7 @@ export default createStore<State>({
       favourites: getItem("favourites"),
       favouriteCharacters: [],
       initialLoad: false,
+      favouritesAreLoading: false,
     };
   },
   mutations: mutations,

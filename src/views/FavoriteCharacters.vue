@@ -36,10 +36,10 @@ export default defineComponent({
     const store = useStore();
     let data: Ref<Character[]> = ref([]);
     let noFavouritesMessage = ref("No favourite characters");
-    let isLoading = ref(false);
+    const isLoading = computed(() => store.getters.favouritesAreLoading);
 
     if (!store.getters.initialLoad) {
-      store.dispatch("loadCharacters");
+      store.dispatch("loadFavouritesCharacters");
     }
 
     const favouritesCount = computed(() => store.getters.favouritesCount);

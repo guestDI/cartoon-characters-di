@@ -3,9 +3,7 @@
 <template>
   <router-link :to="{ name: 'CharacterDetails', params: { id: card.id } }">
     <div class="card">
-      <div class="img">
-        <img :alt="card.name" :src="card.image" />
-      </div>
+      <img :alt="card.name" :src="card.image" />
       <div class="content">
         <div class="details">
           <span class="name">{{ card.name }}</span>

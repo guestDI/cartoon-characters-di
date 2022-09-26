@@ -18,9 +18,7 @@
       </div>
       <Button @click.prevent="btnAction">{{ btnText }}</Button>
     </div>
-    <div class="img">
-      <img :alt="character?.name" :src="character?.image" />
-    </div>
+    <img :alt="character?.name" :src="character?.image" />
   </div>
 </template>
 
@@ -56,6 +54,7 @@ export default defineComponent({
   display: flex;
   margin: 0 auto;
   justify-content: space-between;
+  box-shadow: 7px 2px 24px -19px rgba(66, 68, 90, 1);
 
   img {
     width: 13rem;
@@ -66,6 +65,13 @@ export default defineComponent({
   .content {
     text-align: left;
     padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+
+    button {
+      width: 14rem;
+    }
     .details {
       display: flex;
       flex-direction: column;

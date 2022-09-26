@@ -20,28 +20,25 @@ export const actions: ActionTree<State, State> = {
       JSON.stringify([...context.state.favourites])
     );
   },
-  loadCharacters(context, payload) {
-    console.log("state", context.state.favouriteCharacters);
-    console.log("payload", payload);
-
+  loadFavouritesCharacters(context) {
+    context.commit(MutationTypes.FAVOURITES_ARE_LOADING, { value: true });
     CharacterService.getCharactersByIds(context.state.favourites.toString())
       .then((response) => {
         if (!Array.isArray(response.data)) {
           context.commit(MutationTypes.LOAD_FAVOURITES, {
             value: [response.data],
           });
-          // context.dispatch("loadCharacters", { value: [response.data] });
         } else {
           context.commit(MutationTypes.LOAD_FAVOURITES, {
             value: response.data,
           });
-          // context.dispatch("loadCharacters", { value: response.data });
         }
+
+        context.commit(MutationTypes.FAVOURITES_ARE_LOADING, { value: false });
       })
       .catch((error) => {
+        context.commit(MutationTypes.FAVOURITES_ARE_LOADING, { value: false });
         throw new Error(error);
       });
-
-    // context.commit(MutationTypes.LOAD_FAVOURITES, payload);
   },
 };

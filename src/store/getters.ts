@@ -5,6 +5,8 @@ import { State } from "./index";
 export type Getters = {
   favouritesCount(state: State): number;
   favouriteCharacters(state: State): Character[];
+  initialLoad(state: State): boolean;
+  favouritesAreLoading(state: State): boolean;
 };
 
 export const getters: GetterTree<State, State> & Getters = {
@@ -16,5 +18,8 @@ export const getters: GetterTree<State, State> & Getters = {
   },
   initialLoad(state): boolean {
     return state.initialLoad;
+  },
+  favouritesAreLoading(state): boolean {
+    return state.favouritesAreLoading;
   },
 };

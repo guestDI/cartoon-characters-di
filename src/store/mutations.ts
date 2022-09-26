@@ -11,6 +11,9 @@ export const mutations: MutationTree<State> = {
     state.favouriteCharacters = [...payload.value];
     state.initialLoad = true;
   },
+  [MutationTypes.FAVOURITES_ARE_LOADING](state, payload: { value: boolean }) {
+    state.favouritesAreLoading = payload.value;
+  },
   [MutationTypes.REMOVE_FROM_FAVOURITES](state, payload: { value: number }) {
     const index = state.favourites.indexOf(payload.value);
     if (index > -1) {
